@@ -8,7 +8,6 @@
 - `src/AddressRepository.php` - работа с адресами в БД
 - `sql/schema.sql` - создание таблицы
 - `sql/demo_seed.sql` - демо-данные для быстрого старта
-- `tools/import_fias_csv.php` - импорт из CSV (ФИАС)
 - `tools/import_kladr_csv.php` - импорт из CSV (КЛАДР)
 
 ## Быстрая проверка
