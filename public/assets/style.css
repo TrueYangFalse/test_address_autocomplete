@@ -92,3 +92,8 @@ h1 {
     border-radius: 10px;
     background: #f3f4f6;
 }
+
+.selected-address-error {
+    background: #fee2e2;
+    color: #991b1b;
+}

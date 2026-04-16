@@ -14,16 +14,30 @@ final class AddressRepository
             return [];
         }
 
-        $sql = <<<'SQL'
+        $tokens = preg_split('/[\s,.;:()\-]+/u', mb_strtolower($normalizedQuery), -1, PREG_SPLIT_NO_EMPTY);        if (!$tokens) {
+            return [];
+        }
+
+        $conditions = [];
+        $params = [];
+        foreach ($tokens as $index => $token) {
+            $paramName = ':token' . $index;
+            $conditions[] = "full_address ILIKE {$paramName}";
+            $params[$paramName] = '%' . $token . '%';
+        }
+
+        $sql = '
             SELECT id, full_address
             FROM fias_addresses
-            WHERE full_address ILIKE :query
+            WHERE ' . implode(' AND ', $conditions) . '
             ORDER BY full_address
             LIMIT :limit
-        SQL;
+        ';
 
         $stmt = $this->pdo->prepare($sql);
-        $stmt->bindValue(':query', '%' . $normalizedQuery . '%', PDO::PARAM_STR);
+        foreach ($params as $paramName => $value) {
+            $stmt->bindValue($paramName, $value, PDO::PARAM_STR);
+        }
         $stmt->bindValue(':limit', max(1, min(20, $limit)), PDO::PARAM_INT);
         $stmt->execute();
 
